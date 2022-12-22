@@ -2,6 +2,7 @@
 /.build/
 
 RELEASE-VERSION
+APPNAME.pc
 
 /libcork*.tar.gz
 /libcork*.tar.bz2
