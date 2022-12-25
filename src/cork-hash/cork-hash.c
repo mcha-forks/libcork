@@ -25,14 +25,6 @@ static const char  *string = NULL;
 
 #define OPT_VERSION 1000
 
-static struct option  opts[] = {
-    { "big", no_argument, NULL, 'b' },
-    { "fastest", no_argument, NULL, 'f' },
-    { "stable", no_argument, NULL, 's' },
-    { "version", no_argument, NULL, OPT_VERSION },
-    { NULL, 0, NULL, 0 }
-};
-
 static void
 usage(void)
 {
@@ -61,7 +53,7 @@ static void
 parse_options(int argc, char **argv)
 {
     int  ch;
-    while ((ch = getopt_long(argc, argv, "+bfs", opts, NULL)) != -1) {
+    while ((ch = getopt(argc, argv, "bfs")) != -1) {
         switch (ch) {
             case 'b':
                 type = CORK_HASH_BIG;
@@ -72,8 +64,6 @@ parse_options(int argc, char **argv)
             case 's':
                 type = CORK_HASH_STABLE;
                 break;
-            case OPT_VERSION:
-                print_version();
                 exit(EXIT_SUCCESS);
             default:
                 usage();
