@@ -8,8 +8,8 @@
 #-----------------------------------------------------------------------
 # Configuration options that control all of the below
 
-set(ENABLE_SHARED YES CACHE BOOL "Whether to build a shared library")
-set(ENABLE_SHARED_EXECUTABLES YES CACHE BOOL
+set(ENABLE_SHARED NO CACHE BOOL "Whether to build a shared library")
+set(ENABLE_SHARED_EXECUTABLES NO CACHE BOOL
     "Whether to link executables using shared libraries")
 set(ENABLE_STATIC YES CACHE BOOL "Whether to build a static library")
 
@@ -147,81 +147,4 @@ function(add_c_library __TARGET_NAME)
     set(datarootdir "\${prefix}/share")
     set(includedir "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
     set(libdir "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
-    string(REPLACE
-      "${CMAKE_INSTALL_DATAROOTDIR}/" ""
-      base_docdir
-      "${CMAKE_INSTALL_DOCDIR}")
-    set(docdir "\${datarootdir}/${base_docdir}")
-    configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/${__PKGCONFIG_NAME}.pc.in
-        ${CMAKE_CURRENT_BINARY_DIR}/${__PKGCONFIG_NAME}.pc
-        @ONLY
-    )
-    install(
-        FILES ${CMAKE_CURRENT_BINARY_DIR}/${__PKGCONFIG_NAME}.pc
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
-    )
 endfunction(add_c_library)
-
-
-#-----------------------------------------------------------------------
-# Executable
-
-function(add_c_executable __TARGET_NAME)
-    set(options SKIP_INSTALL)
-    set(one_args OUTPUT_NAME)
-    set(multi_args LIBRARIES LOCAL_LIBRARIES SOURCES)
-    cmake_parse_arguments(_ "${options}" "${one_args}" "${multi_args}" ${ARGN})
-
-    add_executable(${__TARGET_NAME} ${__SOURCES})
-
-    if (CMAKE_VERSION VERSION_GREATER "2.8.11")
-        target_include_directories(
-            ${__TARGET_NAME} PUBLIC
-            ${CMAKE_SOURCE_DIR}/include
-            ${CMAKE_BINARY_DIR}/include
-        )
-    else (CMAKE_VERSION VERSION_GREATER "2.8.11")
-        include_directories(
-            ${CMAKE_SOURCE_DIR}/include
-            ${CMAKE_BINARY_DIR}/include
-        )
-    endif (CMAKE_VERSION VERSION_GREATER "2.8.11")
-
-    if (ENABLE_SHARED_EXECUTABLES)
-        target_add_shared_libraries(
-            ${__TARGET_NAME}
-            "${__LIBRARIES}"
-            "${__LOCAL_LIBRARIES}"
-        )
-    else (ENABLE_SHARED_EXECUTABLES)
-        target_add_static_libraries(
-            ${__TARGET_NAME}
-            "${__LIBRARIES}"
-            "${__LOCAL_LIBRARIES}"
-        )
-    endif (ENABLE_SHARED_EXECUTABLES)
-
-    if (NOT __SKIP_INSTALL)
-        install(TARGETS ${__TARGET_NAME} RUNTIME DESTINATION bin)
-    endif (NOT __SKIP_INSTALL)
-endfunction(add_c_executable)
-
-
-#-----------------------------------------------------------------------
-# Test case
-
-pkgconfig_prereq(check OPTIONAL)
-
-function(add_c_test TEST_NAME)
-    get_property(ALL_LOCAL_LIBRARIES GLOBAL PROPERTY ALL_LOCAL_LIBRARIES)
-    add_c_executable(
-        ${TEST_NAME}
-        SKIP_INSTALL
-        OUTPUT_NAME ${TEST_NAME}
-        SOURCES ${TEST_NAME}.c
-        LIBRARIES check
-        LOCAL_LIBRARIES ${ALL_LOCAL_LIBRARIES}
-    )
-    add_test(${TEST_NAME} ${TEST_NAME})
-endfunction(add_c_test)

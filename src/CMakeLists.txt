@@ -83,36 +83,3 @@ if (ENABLE_STATIC OR NOT ENABLE_SHARED_EXECUTABLES OR NOT ENABLE_SHARED_TESTS)
         COMPILE_DEFINITIONS CORK_API=CORK_LOCAL
     )
 endif (ENABLE_STATIC OR NOT ENABLE_SHARED_EXECUTABLES OR NOT ENABLE_SHARED_TESTS)
-
-
-#-----------------------------------------------------------------------
-# Utility commands
-
-add_c_executable(
-    cork-hash
-    OUTPUT_NAME cork-hash
-    SOURCES cork-hash/cork-hash.c
-    LOCAL_LIBRARIES
-        libcork
-)
-
-add_c_executable(
-    cork-initializer
-    SKIP_INSTALL
-    OUTPUT_NAME cork-initializer
-    SOURCES
-        cork-initializer/init1.c
-        cork-initializer/init2.c
-        cork-initializer/main.c
-    LOCAL_LIBRARIES
-        libcork
-)
-
-add_c_executable(
-    cork-test
-    SKIP_INSTALL
-    OUTPUT_NAME cork-test
-    SOURCES cork-test/cork-test.c
-    LOCAL_LIBRARIES
-        libcork
-)
