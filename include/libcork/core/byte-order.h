@@ -29,22 +29,10 @@
  * everything detection-related separated out from what we define based
  * on that detection. */
 
-#if CORK_CONFIG_IS_BIG_ENDIAN
-#define CORK_HOST_ENDIANNESS  CORK_BIG_ENDIAN
-#define CORK_OTHER_ENDIANNESS  CORK_LITTLE_ENDIAN
-#define CORK_HOST_ENDIANNESS_NAME   "big"
-#define CORK_OTHER_ENDIANNESS_NAME  "little"
-
-#elif CORK_CONFIG_IS_LITTLE_ENDIAN
 #define CORK_HOST_ENDIANNESS  CORK_LITTLE_ENDIAN
 #define CORK_OTHER_ENDIANNESS  CORK_BIG_ENDIAN
 #define CORK_HOST_ENDIANNESS_NAME   "little"
 #define CORK_OTHER_ENDIANNESS_NAME  "big"
-
-#else
-#error "Unknown endianness"
-#endif
-
 
 /* Returns the byte-swapped version an integer, regardless of the
  * underlying endianness.
