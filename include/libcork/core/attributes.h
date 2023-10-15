@@ -154,11 +154,7 @@
  * if the compiler decides not to inline the function.
  */
 
-#if CORK_CONFIG_HAVE_C99_INLINE
-#define CORK_INLINE inline
-#else
 #define CORK_INLINE CORK_ATTR_UNUSED static
-#endif
 
 
 /*
